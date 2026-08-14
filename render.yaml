@@ -1,10 +1,9 @@
 services:
   - type: web
     name: miku-beam
-    env: node
+    runtime: node
     buildCommand: cd web-client && npm install && npm run build
-    startCommand: npm install -g serve && serve -s web-client/dist -l 3000
-    staticPublishPath: web-client/dist
+    startCommand: cd web-client && npm install -g serve && serve -s dist -l 3000
     envVars:
       - key: NODE_ENV
         value: production
