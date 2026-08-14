@@ -80,13 +80,13 @@ func main() {
 		})
 	}
 
-	// Socket.io server with CORS configuration
-	io := socketio.NewServer(&socketio.ServerOptions{
-		Cors: &socketio.CorsOptions{
-			Origin:      []string{"*"},
-			Credentials: true,
-		},
-	}, nil)
+	// Socket.io server (compatible con v3/v4 clients)
+	io := socketio.NewServer(nil, nil)
+	
+	// Enable CORS for Socket.io
+	io.SetAllowRequest(func(r *http.Request) bool {
+		return true // Allow all connections
+	})
 
 	reg := engine.NewRegistry()
 	reg.Register(engine.AttackHTTPFlood, httpA.NewFloodWorker())
