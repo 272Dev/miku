@@ -166,18 +166,17 @@ func (e *Engine) Start(attackID string, parent context.Context, params AttackPar
 				total := atomic.LoadInt64(&instance.TotalSent)
 				delta := total - lastTotal
 				lastTotal = total
-				// Only send stats if there's actual activity (delta > 0) or it's the first tick
-				if delta > 0 || lastTotal == 0 {
-					select {
-					case statsCh <- AttackStats{
-						Timestamp:    t,
-						PacketsPerS:  delta,
-						TotalPackets: total,
-						Proxies:      proxyCount,
-						Log:          "", // Empty log - individual workers will send their own logs
-					}:
-					case <-ctx.Done():
-						return
+				// Always send stats (not just when delta > 0)
+				select {
+				case statsCh <- AttackStats{
+					Timestamp:    t,
+					PacketsPerS:  delta,
+					TotalPackets: total,
+					Proxies:      proxyCount,
+					Log:          "", // Empty log - individual workers will send their own logs
+				}:
+				case <-ctx.Done():
+					return
 					}
 				}
 			}
