@@ -177,7 +177,6 @@ func (e *Engine) Start(attackID string, parent context.Context, params AttackPar
 				}:
 				case <-ctx.Done():
 					return
-					}
 				}
 			}
 		}
