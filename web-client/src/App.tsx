@@ -240,6 +240,12 @@ function App() {
             {socketState === 'connecting' && (<span className="px-2 py-0.5 rounded bg-yellow-500 text-white">connecting...</span>)}
             {socketState === 'disconnected' && (<span className="px-2 py-0.5 rounded bg-red-500 text-white">disconnected {lastSocketError ? `(${lastSocketError})` : ''}</span>)}
           </div>
+          {socketState === 'disconnected' && (
+            <div className="mt-3 p-3 bg-red-100 border border-red-300 rounded-md text-red-700 text-sm">
+              <strong>⚠️ Backend server is offline</strong><br/>
+              The WebSocket connection to the backend is unavailable. Make sure the mmb-server is running.
+            </div>
+          )}
           <p className={`${animState === 0 || animState === 3 ? "text-gray-600" : "text-white"}`}>
             Because DDoS attacks are also cute and even more so when Miku does them.
           </p>
@@ -277,10 +283,13 @@ function App() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => (isAttacking ? stopAttack() : startAttack())}
+                  disabled={socketState !== 'connected' && !isAttacking}
                   className={`
                   px-8 py-2 rounded-lg font-semibold text-white transition-all w-full
                   ${isAttacking
                       ? "bg-red-500 hover:bg-red-600"
+                      : socketState !== 'connected' 
+                      ? "bg-gray-400 cursor-not-allowed"
                       : "bg-pink-500 hover:bg-pink-600"
                     }
                   flex items-center justify-center gap-2
@@ -293,10 +302,13 @@ function App() {
                   onClick={() =>
                     isAttacking ? stopAttack() : startAttack(true)
                   }
+                  disabled={socketState !== 'connected' && !isAttacking}
                   className={`
                   px-2 py-2 rounded-lg font-semibold text-white transition-all
                   ${isAttacking
                       ? "bg-gray-500 hover:bg-red-600"
+                      : socketState !== 'connected'
+                      ? "bg-gray-400 cursor-not-allowed"
                       : "bg-cyan-500 hover:bg-cyan-600"
                     }
                   flex items-center justify-center gap-2
