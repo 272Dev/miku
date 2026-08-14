@@ -21,7 +21,11 @@ export class MMBClient {
     constructor() {
         // Enable socket.io client debugging via localStorage: set debug to 'mmb:*'
         // Example: localStorage.setItem('mmb:debug', '1')
-        this.socket = io(window.location.origin, {
+        
+        // Connect to backend: use VITE_MMB_SERVER env var or default to localhost:5000
+        const backendUrl = import.meta.env.VITE_MMB_SERVER || 'http://localhost:5000';
+        
+        this.socket = io(backendUrl, {
             transports: ["websocket", "polling"],
         });
 
